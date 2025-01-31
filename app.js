@@ -1,5 +1,6 @@
 //O principal objetivo deste desafio é fortalecer suas habilidades em lógica de programação. Aqui você deverá desenvolver a lógica para resolver o problema.
 // Array para armazenar os nomes dos participantes
+// Lista de amigos
 let amigos = [];
 
 function adicionarAmigo() {
@@ -16,14 +17,15 @@ function adicionarAmigo() {
         return;
     }
     
-    // Adiciona à lista
+    // Adiciona o nome à lista
     amigos.push(nome);
     
-    // Atualiza a lista na tela
+    // Atualiza a exibição da lista
     atualizarLista();
     
     // Limpa o campo de input
     inputAmigo.value = "";
+    inputAmigo.focus();
 }
 
 function atualizarLista() {
@@ -34,9 +36,10 @@ function atualizarLista() {
         const li = document.createElement("li");
         li.textContent = amigo;
         
-        // Botão de remover nome da lista
+        // Botão para remover nome individualmente
         const botaoRemover = document.createElement("button");
         botaoRemover.textContent = "❌";
+        botaoRemover.classList.add("remove-button");
         botaoRemover.onclick = () => removerAmigo(index);
         
         li.appendChild(botaoRemover);
@@ -50,41 +53,30 @@ function removerAmigo(index) {
 }
 
 function sortearAmigo() {
-    if (amigos.length < 2) {
-        alert("Adicione pelo menos 2 amigos para realizar o sorteio!");
+    if (amigos.length === 0) {
+        alert("Adicione nomes antes de sortear!");
         return;
     }
-    
-    let sorteio = [];
-    let amigosDisponiveis = [...amigos];
 
-    amigos.forEach((amigo) => {
-        let possiveis = amigosDisponiveis.filter(a => a !== amigo); // Remove a si mesmo
+    // Sorteia um nome aleatório
+    const indiceSorteado = Math.floor(Math.random() * amigos.length);
+    const nomeSorteado = amigos[indiceSorteado];
 
-        if (possiveis.length === 0) {
-            alert("Não foi possível realizar o sorteio, tente adicionar mais participantes!");
-            return;
-        }
+    // Limpa a lista de participantes
+    amigos = [];
+    atualizarLista();
 
-        let sorteado = possiveis[Math.floor(Math.random() * possiveis.length)];
-
-        sorteio.push({ amigo, sorteado });
-
-        // Remove o sorteado da lista
-        amigosDisponiveis = amigosDisponiveis.filter(a => a !== sorteado);
-    });
-
-    exibirResultado(sorteio);
+    // Exibe o resultado do sorteio em destaque
+    exibirResultado(nomeSorteado);
 }
 
-function exibirResultado(sorteio) {
+function exibirResultado(nome) {
     const resultadoLista = document.getElementById("resultado");
-    resultadoLista.innerHTML = "";
+    resultadoLista.innerHTML = ""; // Limpa resultados anteriores
 
-    sorteio.forEach((par) => {
-        const li = document.createElement("li");
-        li.textContent = `${par.amigo} → ${par.sorteado}`;
-        resultadoLista.appendChild(li);
-    });
+    const li = document.createElement("li");
+    li.textContent = `🎉 ${nome} foi sorteado! 🎉`;
+    li.classList.add("sorteado");
+
+    resultadoLista.appendChild(li);
 }
-
